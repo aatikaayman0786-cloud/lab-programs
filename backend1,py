@@ -1,0 +1,25 @@
+from flask import Flask,jsonify,request
+
+app=Flask(__name__)
+
+users=[
+    {"id":1,"name":"yogitha","course":"BCA"},
+     {"id":2,"name":"shree","course":"BCA"},
+      {"id":3,"name":"keerthi","course":"BCA"},
+]
+@app.route("/users", methods=["GET"])
+def get_users():
+    return jsonify(users)
+
+@app.route("/users/<int:user_id>",
+methods=["GET"])
+def get_user(user_id):
+    for user in users:
+        if user["id"] == user_id:
+            return jsonify(user)
+
+    return jsonify({"message" :"user not found"})
+
+if __name__ == "__main__":
+    app.run(debug=True)
+    
