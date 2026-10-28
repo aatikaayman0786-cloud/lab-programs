@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API Data Fetch</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f0f2f5; }
+    .container { background: white; padding: 20px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 10px; border: 1px solid #ddd; }
+    th { background: #007bff; color: white; }
+    #loading, #error { display: none; padding: 10px; }
+    #error { color: red; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Users Data from API</h2>
+    <button onclick="fetchUsers()">Load Users</button>
+    <p id="loading">Loading...</p>
+    <p id="error"></p>
+
+    <table>
+      <thead>
+        <tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th></tr>
+      </thead>
+      <tbody id="userBody"></tbody>
+    </table>
+  </div>
+
+  <script src="script8.js"></script>
+</body>
+</html>
