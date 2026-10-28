@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>React via CDN</title>
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+body{font-family:Arial;padding:40px;background:#f0f2f5}
+.card{background:white;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);margin-bottom:15px}
+.profile{display:flex;align-items:center;gap:20px}
+.profile img{width:80px;height:80px;border-radius:50%}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+
+// props example
+function Profile({name,role,avatar}){
+ return(
+  <div class="card profile">
+   <img src={avatar} alt={name}/>
+   <div><h3>{name}</h3><p>{role}</p></div>
+  </div>
+ )
+}
+
+// useState example
+function Counter(){
+ const [count,setCount]=React.useState(0);
+ return(
+  <div class="card">
+   <h3>Counter:{count}</h3>
+   <button onClick={()=>setCount(count+1)}>+</button>
+   <button onClick={()=>setCount(count-1)}>-</button>
+   <button onClick={()=>setCount(0)}>Reset</button>
+  </div>
+ )
+}
+
+// fetch data example
+function UserList(){
+ const [users,setUsers]=React.useState([]);
+ const [loading,setLoading]=React.useState(false);
+ const fetchUsers=async()=>{
+  setLoading(true);
+  let res=await fetch("https://jsonplaceholder.typicode.com/users");
+  let data=await res.json();
+  setUsers(data);
+  setLoading(false);
+ }
+ return(
+  <div class="card">
+   <h3>Users</h3>
+   <button onClick={fetchUsers}>{loading?"Loading...":"Load Users"}</button>
+   <ul>{users.map(u=><li key={u.id}>{u.name}</li>)}</ul>
+  </div>
+ )
+}
+
+function App(){
+ return(
+  <div>
+   <h1>React via CDN</h1>
+   <Profile name="Alice Johnson" role="Software Engineer" avatar="https://i.pravatar.cc/80?img=1"/>
+   <Profile name="Bob Smith" role="Data Scientist" avatar="https://i.pravatar.cc/80?img=2"/>
+   <Counter/>
+   <UserList/>
+  </div>
+ )
+}
+
+const root=ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App/>);
+</script>
+</body>
+</html>
