@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard</title>
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box} body{font-family:Arial}
+.dashboard{display:grid;grid-template-columns:250px 1fr;grid-template-rows:60px 1fr;min-height:100vh}
+.navbar{grid-column:1/-1;background:#1a1a2e;color:white;display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+.sidebar{background:#16213e;color:white;padding:20px}
+.sidebar a{display:block;color:#ccc;padding:10px;text-decoration:none;margin:5px 0}
+.content{padding:20px;background:#f0f2f5}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px}
+.card{background:white;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.value{font-size:32px;font-weight:bold;color:#1a1a2e}
+table{width:100%;border-collapse:collapse;background:white;border-radius:8px;margin-top:20px}
+th{background:#1a1a2e;color:white;padding:12px} td{padding:10px;border-bottom:1px solid #ddd}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+
+function Navbar(){
+ return(<div className="navbar"><h2>Dashboard</h2><span>Welcome, Admin</span></div>)
+}
+
+function Sidebar(){
+ return(
+  <div className="sidebar">
+   <h3>Menu</h3>
+   <a href="#">Home</a><a href="#">Analytics</a><a href="#">Users</a><a href="#">Settings</a>
+  </div>
+ )
+}
+
+function StatCard({title,value,color}){
+ return(<div className="card"><h3>{title}</h3><p className="value" style={{color}}>{value}</p></div>)
+}
+
+function UserTable({users}){
+ return(
+  <div>
+   <h3>Recent Users</h3>
+   <table>
+    <thead><tr><th>Name</th><th>Email</th><th>City</th></tr></thead>
+    <tbody>{users.slice(0,5).map(u=><tr key={u.id}><td>{u.name}</td><td>{u.email}</td><td>{u.address.city}</td></tr>)}</tbody>
+   </table>
+  </div>
+ )
+}
+
+function Dashboard(){
+ const [users,setUsers]=React.useState([]);
+ const [stats,setStats]=React.useState({users:0,revenue:0,orders:0});
+
+ React.useEffect(()=>{
+  fetch("https://jsonplaceholder.typicode.com/users").then(r=>r.json()).then(data=>{
+   setUsers(data);
+   setStats({users:data.length,revenue:data.length*150,orders:data.length*3});
+  });
+ },[]);
+
+ return(
+  <div className="dashboard">
+   <Navbar/><Sidebar/>
+   <div className="content">
+    <div className="cards">
+     <StatCard title="Total Users" value={stats.users} color="#007bff"/>
+     <StatCard title="Revenue" value={"$"+stats.revenue} color="#28a745"/>
+     <StatCard title="Orders" value={stats.orders} color="#dc3545"/>
+     <StatCard title="Growth" value="+12%" color="#fd7e14"/>
+    </div>
+    <UserTable users={users}/>
+   </div>
+  </div>
+ )
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<Dashboard/>);
+</script>
+</body>
+</html>
